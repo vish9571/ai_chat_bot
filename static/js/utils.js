@@ -1,35 +1,38 @@
 // utils.js
 
-// Highlight all new code blocks
-export function highlightNewBlocks() {
-  document.querySelectorAll('#chatBox pre code').forEach(block => {
-    if (!block.classList.contains('hljs')) {
-      hljs.highlightElement(block);
-    }
-  });
-}
-
-// Voice input (shared for both)
 export function initVoiceInput(promptInput, voiceBtn) {
-  if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recog = new Recognition();
-    recog.lang = 'en-US';
-    recog.interimResults = false;
-    recog.maxAlternatives = 1;
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
     voiceBtn.addEventListener("click", () => {
-      recog.start();
+      recognition.start();
       voiceBtn.classList.add("listening");
     });
 
-    recog.onresult = e => {
-      promptInput.value = e.results[0][0].transcript;
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      promptInput.value = transcript;
       voiceBtn.classList.remove("listening");
     };
 
-    recog.onerror = () => voiceBtn.classList.remove("listening");
+    recognition.onerror = () => {
+      voiceBtn.classList.remove("listening");
+    };
   } else {
     voiceBtn.disabled = true;
+    voiceBtn.title = "Speech recognition not supported.";
   }
+}
+
+// 🔥 Dynamically highlight new chat blocks (AI output)
+export function highlightNewBlocks() {
+  document.querySelectorAll("#chatBox pre code").forEach((block) => {
+    if (!block.classList.contains("hljs")) {
+      hljs.highlightElement(block);
+    }
+  });
 }
