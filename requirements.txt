@@ -1,13 +1,14 @@
-Flask==3.0.0
-Flask-Cors==3.1.1
-bcrypt==4.0.1
-python-dotenv==1.0.0
-gunicorn==21.2.0
-requests==2.31.0
-openai==1.16.0
-pandas==2.2.0
-matplotlib==3.8.0
-scikit-learn==1.4.0
-statsmodels==0.14.0
-SQLAlchemy==2.0.0
+Flask
+Flask-Cors
+bcrypt
+python-dotenv
+gunicorn
+requests
+openai
+pandas
+matplotlib
+scikit-learn
+statsmodels
+SQLAlchemy
+# force render deploy
 # force render deploy
