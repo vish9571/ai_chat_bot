@@ -1,0 +1,147 @@
+/* Import Google Font and Font Awesome for icons */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #f0f4fa;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.auth-header {
+  width: 100%;
+  padding: 40px 20px;
+  text-align: center;
+  background: linear-gradient(to right, #00dfd8, #007cf0);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header .intro {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.auth-header .intro-sub {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.login-container {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 10px 0;
+  background: #fff;
+}
+
+.input-group i {
+  margin-right: 10px;
+  color: #888;
+  font-size: 16px;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  font-family: 'Nunito', sans-serif;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  font-size: 16px;
+  background: linear-gradient(to right, #007cf0, #00dfd8);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(to right, #00dfd8, #007cf0);
+}
+
+.show-password-row {
+  text-align: left;
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.error {
+  color: #e53935;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.success {
+  color: #43a047;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+small {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #777;
+  text-align: left;
+}
+
+.link {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.link a {
+  color: #007cf0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 30px 20px;
+  }
+
+  .auth-header .intro {
+    font-size: 26px;
+  }
+
+  .auth-header .intro-sub {
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Interactive eBook</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/auth.css') }}">
+</head>
+<body>
+  <div class="auth-header">
+    <h1 class="intro">📘 Start Learning Today</h1>
+    <p class="intro-sub">Join the Interactive eBook Community</p>
+  </div>
+
+  <div class="login-container">
+    <h2>📝 Create Your Account</h2>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p class="success">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.register') }}">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" name="username" placeholder="Choose a username" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="password" id="password" placeholder="Create a password" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
+      </div>
+
+      <div class="show-password-row">
+        <input type="checkbox" id="showPassword">
+        <label for="showPassword">Show Password</label>
+      </div>
+
+      <small>
+        Must be at least 9 characters and include:
+        1 uppercase letter, 1 number, and 1 special character.
+      </small>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="link">
+      Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("showPassword").addEventListener("change", function () {
+      const pwd = document.getElementById("password");
+      const confirmPwd = document.getElementById("confirm_password");
+      const type = this.checked ? "text" : "password";
+      pwd.type = type;
+      confirmPwd.type = type;
+    });
+  </script>
+</body>
+</html>

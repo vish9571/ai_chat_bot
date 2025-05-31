@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Interactive eBook</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/auth.css') }}">
+</head>
+<body>
+  <div class="auth-header">
+    <h1 class="intro">🚀 Learn. Code. Grow.</h1>
+    <p class="intro-sub">Empower Your Future with Interactive eBook</p>
+  </div>
+
+  <div class="login-container">
+    <h2>🔐 Log In to Your Account</h2>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p class="success">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" name="username" placeholder="Username" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="password" id="password" placeholder="Password" required>
+      </div>
+
+      <div class="show-password-row">
+        <input type="checkbox" id="showPassword">
+        <label for="showPassword">Show Password</label>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="link">
+      Don't have an account? <a href="{{ url_for('auth.register') }}">Register</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("showPassword").addEventListener("change", function () {
+      const passwordField = document.getElementById("password");
+      passwordField.type = this.checked ? "text" : "password";
+    });
+  </script>
+</body>
+</html>

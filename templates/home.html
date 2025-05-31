@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive eBook - Home</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">
+</head>
+<body>
+  <header>
+    <h1>📘 Welcome to the Interactive eBook</h1>
+    <p>Master Python and R with hands-on tutorials, coding exercises, and real-world examples</p>
+  </header>
+
+  <nav>
+    <div class="nav-left">
+      <span>👋 Logged in as <strong>{{ user }}</strong></span>
+    </div>
+    <div class="nav-right">
+      {% if user %}
+        <a href="{{ url_for('auth.logout') }}">🚪 Logout</a>
+      {% endif %}
+    </div>
+  </nav>  
+
+  <section class="ai-guide">
+    <details>
+      <summary>
+        <span class="arrow">▶</span>
+        <h2>How to Use AI for Coding</h2>
+      </summary>
+      <p>Need help writing code, debugging, or understanding syntax? Just ask the AI assistant! It's built to support both Python and R learners with beginner-friendly explanations.</p>
+  
+      <div class="ai-examples">
+        <h3>🧠 Example Questions You Can Ask:</h3>
+        <ul>
+          <li><strong>Python:</strong> <code>How do I write a for loop to print numbers 1 to 10?</code></li>
+          <li><strong>R:</strong> <code>How do I create a data frame with name and age columns?</code></li>
+          <li><strong>Both:</strong> <code>What’s the difference between a list and a dictionary in Python?</code></li>
+        </ul>
+  
+        <h3>✅ What You’ll Get Back:</h3>
+        <ul>
+          <li>Properly formatted code blocks with explanations</li>
+          <li>Copy-ready answers you can try in the code terminal</li>
+          <li>Clear breakdown of logic, variables, and outputs</li>
+        </ul>
+  
+        <div class="ai-example-box">
+          <h4>📌 Example:</h4>
+          <p><strong>Question:</strong> How do I print even numbers from 1 to 10 in Python?</p>
+          <pre><code class="language-python">for i in range(1, 11):
+      if i % 2 == 0:
+          print(i)</code></pre>
+          <p>This loop prints even numbers by checking if <code>i</code> is divisible by 2.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+  
+  
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <i class="fab fa-python fa-2x"></i>
+        <h2>🐍 Python</h2>
+        <p>Popular for data science, web development, and automation. Learn basics to advanced topics with interactive lessons.</p>
+        <a href="{{ url_for('main.python_terminal') }}">Explore Python</a>
+      </div>
+      <div class="card">
+        <i class="fas fa-chart-line fa-2x"></i>
+        <h2>📊 R</h2>
+        <p>Preferred by statisticians and data analysts. Dive into data visualization, modeling, and more with practical examples.</p>
+        <a href="{{ url_for('main.r_terminal') }}">Explore R</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="benefits">
+    <h2>💡 Why Choose Us?</h2>
+    <ul>
+      <li><i class="fas fa-code"></i> Real-time code execution and feedback</li>
+      <li><i class="fas fa-tasks"></i> Hands-on projects and quizzes</li>
+      <li><i class="fas fa-exchange-alt"></i> Compare and switch between Python and R easily</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>© 2025 Interactive eBook | Contact: vish04787@gmail.com</p>
+  </footer>
+</body>
+</html>
