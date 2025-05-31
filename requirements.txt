@@ -10,3 +10,4 @@ matplotlib==3.8.0
 scikit-learn==1.4.0
 statsmodels==0.14.0
 SQLAlchemy==2.0.0
+# force render deploy
