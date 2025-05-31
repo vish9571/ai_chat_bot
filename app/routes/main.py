@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, jsonify
+from flask import Blueprint, render_template, request, session, jsonify, current_app
 from app.auth.routes import login_required
 import requests
 import os
@@ -27,39 +27,64 @@ def r_terminal():
     return render_template('r_terminal.html', user=user)
 
 # AI Chat Route (OpenAI Integration)
+main_bp = Blueprint('main', __name__)
+
 @main_bp.route('/ask', methods=['POST'])
 @login_required
 def ask_ai():
     user_input = request.json.get('prompt')
-    provider = request.json.get('provider', 'openai')  # Default to OpenAI if not specified
+    provider = request.json.get('provider', 'openai')
 
-    if provider == 'openai':
-        headers = {
-            "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY')}",
-            "Content-Type": "application/json"
-        }
-        url = "https://api.openai.com/v1/chat/completions"
-        model = "gpt-4o"
-    elif provider == 'groq':
-        headers = {
-            "Authorization": f"Bearer {os.environ.get('GROQ_API_KEY')}",
-            "Content-Type": "application/json"
-        }
-        url = "https://api.groq.com/openai/v1/chat/completions"
+    # Strict system message for consistent formatting:
+    system_prompt = """
+You are a helpful and knowledgeable assistant.
+You can explain concepts, generate and explain code, answer general queries, and help with learning.
+
+When writing code, ALWAYS return code inside full HTML tags:
+
+For Python:
+<pre><code class='language-python'>
+[CODE HERE]
+</code></pre>
+
+For R:
+<pre><code class='language-r'>
+[CODE HERE]
+</code></pre>
+
+NEVER use Markdown triple backticks (```).
+Inside <pre><code> blocks:
+- Use real \\n for newlines.
+- Preserve indentation.
+- Do NOT insert <br> tags inside code blocks.
+- Do NOT escape < or > symbols.
+After code, explain clearly.
+"""
+
+    if provider == 'groq':
+        api_url = "https://api.groq.com/openai/v1/chat/completions"
+        api_key = current_app.config['GROQ_API_KEY']
         model = "llama3-8b-8192"
     else:
-        return jsonify({"response": "❌ Invalid provider selected."})
+        api_url = "https://api.openai.com/v1/chat/completions"
+        api_key = current_app.config['OPENAI_API_KEY']
+        model = "gpt-4o"
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
 
     payload = {
         "model": model,
         "messages": [
-            {"role": "system", "content": "You are a helpful AI assistant."},
+            {"role": "system", "content": "You are a helpful AI coding tutor."},
             {"role": "user", "content": user_input}
         ]
     }
 
     try:
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.post(api_url, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
         reply = data['choices'][0]['message']['content']

@@ -2,64 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Learn Python With AI</title>
+  <title>Interactive Python Terminal</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/python.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 </head>
 <body>
+
   <div class="nav-top">
     {% if user %}
       <span>👋 Welcome, <strong id="username">{{ user }}</strong></span> |
-      <a href="{{ url_for('main.home') }}">🏠 Home</a> |
-      <a href="{{ url_for('main.r_terminal') }}">R</a> |
+      <a href="{{ url_for('index') }}">🏠 Home</a> |
+      <a href="{{ url_for('r_terminal') }}">R</a> |
       <a href="{{ url_for('auth.logout') }}">🚪 Logout</a>
     {% endif %}
   </div>
 
-  <h1 class="page-title">Learn Python With AI</h1>
+  <div class="terminal">
+    <h1>Learn Python With AI</h1>
 
-  <div class="dual-column-container">
-    <!-- Left Panel: AI Chat -->
-    <div class="left-panel">
-      <div id="chatBox" class="chat-box"></div>
-      <div class="chat-input-wrapper">
-        <textarea id="prompt" placeholder="Ask me anything..."></textarea>
+    <div class="dual-column-container">
 
-        <!-- ✅ Provider dropdown -->
-        <select id="providerDropdown">
-          <option value="openai" selected>OpenAI</option>
-          <option value="groq">Groq</option>
+      <!-- AI Chat Column -->
+      <div class="left-panel">
+        <div id="chatBox" class="chat-box"></div>
+
+        <div class="chat-input-wrapper">
+          <textarea id="prompt" placeholder="Ask me anything..."></textarea>
+
+          <select id="providerDropdown">
+            <option value="openai" selected>OpenAI</option>
+            <option value="groq">Groq</option>
+          </select>
+
+          <button id="voiceBtn">🎙️</button>
+          <button id="sendBtn">➤</button>
+        </div>
+
+        <h5 style="text-align: center;">AI may produce inaccurate info — verify important outputs.</h5>
+      </div>
+
+      <!-- Python Code Column -->
+      <div class="right-panel">
+        <textarea id="codePy" placeholder="Write Python code here..."></textarea>
+
+        <div class="code-buttons">
+          <button id="runPy">▶️ Run</button>
+          <button id="resetPy">🔄 Reset</button>
+        </div>
+
+        <select id="templateDropdown">
+          <option disabled selected>Templates</option>
         </select>
 
-        <button id="voiceBtn" class="chat-icon" title="Speak">🎙️</button>
-        <button id="sendBtn" class="chat-icon" title="Send">➤</button>
+        <pre><code class="output" id="outputPy"></code></pre>
       </div>
-      <h5 style="text-align: center;">AI can make mistakes. Verify important info.</h5>
+
     </div>
 
-    <!-- Right Panel: Python Code Execution -->
-    <div class="right-panel">
-      <select id="templateDropdown">
-        <option disabled selected>Select Template</option>
-      </select>
-      <textarea id="codePy" placeholder="Write Python code here..."></textarea>
-      <div class="code-buttons">
-        <button id="runPy">▶️ Run</button>
-        <button id="resetPy">🔄 Reset</button>
-        <button onclick="printTerminal()" class="print">🖨️ Print</button>
-      </div>
-      <pre><code class="output" id="outputPy"></code></pre>
+    <div id="loadingMessage" style="color:#aaa; text-align:center; padding:10px;">
+      ⏳ Loading Python packages...
     </div>
-  </div>
-
-  <div id="loadingMessage" style="color: #ccc; text-align: center; padding: 20px;">
-    ⏳ Loading Pyodide and packages...
   </div>
 
   <script>hljs.highlightAll();</script>
-
   <script type="module" src="{{ url_for('static', filename='js/terminal/python_terminal.js') }}"></script>
 </body>
 </html>

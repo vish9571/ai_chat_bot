@@ -1,6 +1,6 @@
 import { WebR } from "https://webr.r-wasm.org/latest/webr.mjs";
 import { askAI } from '../chat/ai_chat.js';
-import { initVoiceInput } from '../utils.js';
+import { initVoiceInput, highlightNewBlocks } from '../utils.js';
 import { loadCode, saveCode } from '../features/code_history.js';
 import { generateShareLink, loadSharedCode } from '../features/code_sharing.js';
 import { getTemplates } from '../features/templates.js';
@@ -63,27 +63,22 @@ import { getTemplates } from '../features/templates.js';
     document.getElementById("outputID").innerHTML = "";
   });
 
-  // === AI Chat + Voice Logic (cleaned like python_terminal.js)
+  // ✅ AI Chat Integration
   const promptInput = document.getElementById("prompt");
   const voiceBtn = document.getElementById("voiceBtn");
   const sendBtn = document.getElementById("sendBtn");
+  const providerDropdown = document.getElementById("providerDropdown");
 
   initVoiceInput(promptInput, voiceBtn);
 
   sendBtn.addEventListener("click", () => {
     const prompt = promptInput.value.trim();
     if (!prompt) return;
-    const provider = document.getElementById("providerDropdown").value;
+    const provider = providerDropdown.value;
     askAI(prompt, provider);
   });
 
-  // === Load Shared Code
-  const sharedCode = loadSharedCode();
-  if (sharedCode) {
-    document.getElementById("codeID").value = sharedCode;
-  }
-
-  // === Templates
+  // ✅ Templates for R
   const templateDropdown = document.getElementById("templateDropdown");
   const templates = getTemplates("r");
 
@@ -98,4 +93,10 @@ import { getTemplates } from '../features/templates.js';
     const selectedTemplate = templateDropdown.value;
     document.getElementById("codeID").value = templates[selectedTemplate];
   });
+
+  // ✅ Load shared code if exists
+  const sharedCode = loadSharedCode();
+  if (sharedCode) {
+    document.getElementById("codeID").value = sharedCode;
+  }
 })();

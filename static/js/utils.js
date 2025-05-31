@@ -1,38 +1,34 @@
 // utils.js
 
+// ✅ Voice input (browser built-in Speech Recognition)
 export function initVoiceInput(promptInput, voiceBtn) {
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+  if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recog = new Recognition();
+    recog.lang = 'en-US';
+    recog.interimResults = false;
+    recog.maxAlternatives = 1;
 
     voiceBtn.addEventListener("click", () => {
-      recognition.start();
+      recog.start();
       voiceBtn.classList.add("listening");
     });
 
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      promptInput.value = transcript;
+    recog.onresult = (e) => {
+      promptInput.value = e.results[0][0].transcript;
       voiceBtn.classList.remove("listening");
     };
 
-    recognition.onerror = () => {
-      voiceBtn.classList.remove("listening");
-    };
+    recog.onerror = () => voiceBtn.classList.remove("listening");
   } else {
     voiceBtn.disabled = true;
-    voiceBtn.title = "Speech recognition not supported.";
+    voiceBtn.title = "Speech Recognition not supported";
   }
 }
 
-// 🔥 Dynamically highlight new chat blocks (AI output)
+// ✅ Syntax highlighting (triggered after every AI response)
 export function highlightNewBlocks() {
-  document.querySelectorAll("#chatBox pre code").forEach((block) => {
-    if (!block.classList.contains("hljs")) {
-      hljs.highlightElement(block);
-    }
+  document.querySelectorAll('#chatBox pre code').forEach(block => {
+    if (!block.classList.contains('hljs')) hljs.highlightElement(block);
   });
 }
