@@ -39,7 +39,8 @@ def ask_ai():
     system_prompt = """
 You are a helpful and knowledgeable assistant.
 You can explain concepts, generate and explain code, answer general queries, and help with learning.
-
+When coding-related questions are asked:
+Always format code using markdown with appropriate language tags.
 When writing code, ALWAYS return code inside full HTML tags:
 
 For Python:
