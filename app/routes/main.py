@@ -1,10 +1,38 @@
+from flask import Blueprint, render_template, request, session, jsonify, current_app
+from app.auth.routes import login_required
+import requests
+import os
+
+main_bp = Blueprint('main', __name__)
+
+# Home Route
+@main_bp.route('/')
+@login_required
+def home():
+    user = session.get('user', 'Guest')
+    return render_template('home.html', user=user)
+
+# Python Terminal Route
+@main_bp.route('/python')
+@login_required
+def python_terminal():
+    user = session.get('user', 'Guest')
+    return render_template('python_terminal.html', user=user)
+
+# R Terminal Route
+@main_bp.route('/r')
+@login_required
+def r_terminal():
+    user = session.get('user', 'Guest')
+    return render_template('r_terminal.html', user=user)
+
+# AI Chat Route (OpenAI & Groq Integration)
 @main_bp.route('/ask', methods=['POST'])
 @login_required
 def ask_ai():
     user_input = request.json.get('prompt')
     provider = request.json.get('provider', 'openai')
 
-    # Strict system message for consistent formatting:
     system_prompt = """
 You are a helpful and knowledgeable assistant.
 You can explain concepts, generate and explain code, answer general queries, and help with learning.
