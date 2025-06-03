@@ -5,6 +5,7 @@ import { initVoiceInput, highlightNewBlocks } from '../utils.js';
 import { loadCode, saveCode } from '../features/code_history.js';
 import { generateShareLink, loadSharedCode } from '../features/code_sharing.js';
 import { getTemplates } from '../features/templates.js';
+import { explainCode } from '../features/explain_code.js';
 
 async function loadPyodideScript() {
   document.getElementById("loadingMessage").style.display = "block";
@@ -78,7 +79,10 @@ document.getElementById("resetPy").addEventListener("click", () => {
   document.getElementById("codePy").value = "";
 });
 
+<<<<<<< HEAD:app/static/js/terminal/python_terminal.js
 // ✅ AI Chat Integration
+=======
+>>>>>>> stable-saas-start:static/js/terminal/python_terminal.js
 const promptInput = document.getElementById("prompt");
 const voiceBtn = document.getElementById("voiceBtn");
 const sendBtn = document.getElementById("sendBtn");
@@ -91,9 +95,18 @@ sendBtn.addEventListener("click", () => {
   if (!prompt) return;
   const provider = providerDropdown.value;
   askAI(prompt, provider);
+  promptInput.value = "";
 });
 
+<<<<<<< HEAD:app/static/js/terminal/python_terminal.js
 // ✅ Templates
+=======
+const sharedCode = loadSharedCode();
+if (sharedCode) {
+  document.getElementById("codePy").value = sharedCode;
+}
+
+>>>>>>> stable-saas-start:static/js/terminal/python_terminal.js
 const templateDropdown = document.getElementById("templateDropdown");
 const templates = getTemplates("python");
 
@@ -109,8 +122,14 @@ templateDropdown.addEventListener("change", () => {
   document.getElementById("codePy").value = templates[selectedTemplate];
 });
 
+<<<<<<< HEAD:app/static/js/terminal/python_terminal.js
 // ✅ Load shared code if exists
 const sharedCode = loadSharedCode();
 if (sharedCode) {
   document.getElementById("codePy").value = sharedCode;
 }
+=======
+// Hook Explain Code Button
+const explainBtn = document.getElementById("explainBtn");
+explainBtn.addEventListener("click", () => explainCode("python"));
+>>>>>>> stable-saas-start:static/js/terminal/python_terminal.js

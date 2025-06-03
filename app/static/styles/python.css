@@ -140,14 +140,14 @@ textarea {
   margin-left: 5%;
   margin-bottom: 10%;
   overflow: hidden;
-  max-height: 90%;
+  max-height: 95%;
 }
 
 .left-panel {
   display: flex;
   flex-direction: column;
   flex: 1 1 38%;
-  max-height: 90%;
+  max-height: 95%;
   overflow: hidden;
   margin-right: 5%;
   margin-left: 5%;

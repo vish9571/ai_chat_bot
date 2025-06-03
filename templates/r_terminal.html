@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Learn R With AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/r.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+</head>
+<body>
+  <div class="nav-top">
+    {% if user %}
+      <span>👋 Welcome, <strong id="username">{{ user }}</strong></span> |
+      <a href="{{ url_for('main.home') }}">🏠 Home</a> |
+      <a href="{{ url_for('main.python_terminal') }}">Python</a> |
+      <a href="{{ url_for('auth.logout') }}">🚪 Logout</a>
+    {% endif %}
+  </div>
+
+  <h1 class="page-title">Learn R With AI</h1>
+
+  <div class="dual-column-container">
+    <!-- Left Panel: AI Chat -->
+    <div class="left-panel">
+      <div id="chatBox" class="chat-box"></div>
+      <div class="chat-input-wrapper">
+        <textarea id="prompt" placeholder="Ask me anything..."></textarea>
+        <button id="voiceBtn" class="chat-icon" title="Speak">🎙️</button>
+        <button id="sendBtn" class="chat-icon" title="Send">➤</button>
+      </div>
+        <!-- ✅ Provider dropdown -->
+        <select id="providerDropdown">
+          <option value="openai" selected>OpenAI</option>
+          <option value="groq">Groq</option>
+        </select>
+      <h5 style="text-align: center;">AI can make mistakes. Verify important info.</h5>
+    </div>
+
+    <!-- Right Panel: R Code Execution -->
+    <div class="right-panel">
+      <select id="templateDropdown">
+        <option disabled selected>Select Template</option>
+      </select>
+      <textarea id="codeID" placeholder="Write R code here..."></textarea>
+      <div class="code-buttons">
+        <button id="runID">▶️ Run</button>
+        <button id="resetID">🔄 Reset</button>
+        <button id="explainCode">🤖 Explain Code</button>
+      </div>
+      <pre><code class="output" id="outputID"></code></pre>
+    </div>
+  </div>
+
+  <div id="loadingMessage" style="color: #ccc; text-align: center; padding: 20px;">
+    ⏳ Loading WebR and packages...
+  </div>
+
+  <script>hljs.highlightAll();</script>
+
+  <script type="module" src="{{ url_for('static', filename='js/terminal/r_terminal.js') }}"></script>
+</body>
+</html>

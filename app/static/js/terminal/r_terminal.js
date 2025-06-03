@@ -4,6 +4,7 @@ import { initVoiceInput, highlightNewBlocks } from '../utils.js';
 import { loadCode, saveCode } from '../features/code_history.js';
 import { generateShareLink, loadSharedCode } from '../features/code_sharing.js';
 import { getTemplates } from '../features/templates.js';
+import { explainCode } from '../features/explain_code.js';
 
 (async () => {
   const webR = new WebR();
@@ -100,3 +101,7 @@ import { getTemplates } from '../features/templates.js';
     document.getElementById("codeID").value = sharedCode;
   }
 })();
+
+// Hook Explain Code Button
+const explainBtn = document.getElementById("explainBtn");
+explainBtn.addEventListener("click", () => explainCode("r"));
