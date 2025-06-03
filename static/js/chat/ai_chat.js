@@ -14,7 +14,7 @@ export async function askAI(prompt, provider = "openai") {
   // Show user message
   const userMsg = document.createElement("div");
   userMsg.classList.add("message", "user");
-  userMsg.innerHTML = `<div class="text-content"><strong>🧠 You:</strong><br>${prompt}</div>`;
+  userMsg.innerHTML = `<div class="text-content"><strong></strong><br>${prompt}</div>`;
   chatBox.appendChild(userMsg);
   chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -23,7 +23,7 @@ export async function askAI(prompt, provider = "openai") {
   // Show typing/loading
   const typing = document.createElement("div");
   typing.classList.add("message", "bot");
-  typing.innerHTML = `<div class="text-content"><em>🤖 Thinking...</em></div>`;
+  typing.innerHTML = `<div class="text-content"><em>✨ Thinking...</em></div>`;
   chatBox.appendChild(typing);
   chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -44,7 +44,7 @@ export async function askAI(prompt, provider = "openai") {
 
       const botMsg = document.createElement("div");
       botMsg.classList.add("message", "bot");
-      botMsg.innerHTML = `<div class="text-content"><strong>🤖 AI:</strong><br>${rawHTML}</div>`;
+      botMsg.innerHTML = `<div class="text-content"><strong></strong><br>${rawHTML}</div>`;
       chatBox.appendChild(botMsg);
 
       highlightNewBlocks();
