@@ -28,7 +28,7 @@ export function initVoiceInput(promptInput, voiceBtn) {
 
 // ✅ Syntax highlighting (triggered after every AI response)
 export function highlightNewBlocks() {
-  document.querySelectorAll('#chatBox pre code').forEach(block => {
+  document.querySelectorAll('pre code').forEach(block => {
     if (!block.classList.contains('hljs')) hljs.highlightElement(block);
   });
 }

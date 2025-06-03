@@ -3,27 +3,27 @@ from flask import Flask
 from flask_cors import CORS
 
 def create_app():
-    # ✅ Calculate absolute path to the /app folder
-    basedir = os.path.abspath(os.path.dirname(__file__))
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+    project_root = os.path.abspath(os.path.join(base_dir, '..'))
 
-    # ✅ Tell Flask where to find templates and static folders
     app = Flask(
         __name__,
-        static_folder=os.path.join(basedir, 'static'),
-        template_folder=os.path.join(basedir, 'templates')
+        template_folder=os.path.join(project_root, 'templates'),
+        static_folder=os.path.join(project_root, 'static')
     )
 
-    # ✅ Load your config
     app.config.from_object('config.Config')
-
-    # ✅ CORS enabled if needed
     CORS(app)
 
-    # ✅ Import & register blueprints
+    # Import blueprints
     from app.auth.routes import auth_bp
     from app.routes.main import main_bp
 
+    # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
+
+    # Session timeout globally set
+    app.permanent_session_lifetime = app.config['SESSION_LIFETIME']
 
     return app

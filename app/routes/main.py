@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, jsonify, current_app
+from flask import Blueprint, render_template, request, session, jsonify
 from app.auth.routes import login_required
 import requests
 import os
@@ -26,56 +26,70 @@ def r_terminal():
     user = session.get('user', 'Guest')
     return render_template('r_terminal.html', user=user)
 
-# AI Chat Route (OpenAI & Groq Integration)
+# AI Chat Route (OpenAI Integration)
 @main_bp.route('/ask', methods=['POST'])
 @login_required
 def ask_ai():
-    user_input = request.json.get('prompt')
-    provider = request.json.get('provider', 'openai')
+    chat_history = request.json.get('history', [])
+    provider = request.json.get('provider', 'openai')  # Default to OpenAI if not specified
+    system_prompt = """ 
+You are a helpful and expert AI coding assistant.
 
-    system_prompt = """
-You are a helpful and knowledgeable assistant.
-You can explain concepts, generate and explain code, answer general queries, and help with learning.
+Your tasks:
+- Explain code clearly step-by-step.
+- Detect and explain any errors, bugs, or improvements.
+- Always output clean and fully functional code examples.
+- ALWAYS format code using this HTML structure for frontend parsing:
 
-When coding-related questions are asked:
-- ALWAYS wrap code inside full HTML blocks:
-  For Python:
-  <pre><code class='language-python'>[CODE]</code></pre>
+For Python:
+<pre><code class='language-python'>
+# your code here
+</code></pre>
 
-  For R:
-  <pre><code class='language-r'>[CODE]</code></pre>
+For R:
+<pre><code class='language-r'>
+# your code here
+</code></pre>
 
-- NEVER use Markdown triple backticks (```).
-- Use \\n for newlines.
-- Preserve indentation.
-- Avoid escaping < > symbols inside code blocks.
-- After code, always explain it in plain language.
+Formatting rules:
+- NEVER use Markdown code blocks (no triple backticks).
+- Use real \n newlines inside <pre><code> blocks.
+- NEVER insert <br> tags inside code blocks.
+- Preserve correct indentation and spacing.
+- NEVER escape < and > symbols inside code blocks.
+- After code, always provide a clear natural-language explanation.
+- Always start your explanation on a new paragraph after the code block.
+
+Your job is to behave like a professional AI coding tutor, always explaining thoroughly.
 """
 
-    if provider == 'groq':
-        api_url = "https://api.groq.com/openai/v1/chat/completions"
-        api_key = current_app.config['GROQ_API_KEY']
+    if provider == 'openai':
+        headers = {
+            "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY')}",
+            "Content-Type": "application/json"
+        }
+        url = "https://api.openai.com/v1/chat/completions"
+        model = "gpt-4o"
+    elif provider == 'groq':
+        headers = {
+            "Authorization": f"Bearer {os.environ.get('GROQ_API_KEY')}",
+            "Content-Type": "application/json"
+        }
+        url = "https://api.groq.com/openai/v1/chat/completions"
         model = "llama3-8b-8192"
     else:
-        api_url = "https://api.openai.com/v1/chat/completions"
-        api_key = current_app.config['OPENAI_API_KEY']
-        model = "gpt-4o"
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
+        return jsonify({"response": "❌ Invalid provider selected."})
 
     payload = {
         "model": model,
         "messages": [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_input}
+            *chat_history
         ]
     }
 
     try:
-        response = requests.post(api_url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
         reply = data['choices'][0]['message']['content']

@@ -1,5 +1,3 @@
-// python_terminal.js
-
 import { askAI } from '../chat/ai_chat.js';
 import { initVoiceInput, highlightNewBlocks } from '../utils.js';
 import { loadCode, saveCode } from '../features/code_history.js';
@@ -43,7 +41,7 @@ try:
   exec("""${code}""")
   result = sys.stdout.getvalue()
 except Exception as e:
-  result = f"Error: {e}"
+  result = f"❌ Error: {e}"
 finally:
   sys.stdout = _stdout
 
@@ -79,10 +77,7 @@ document.getElementById("resetPy").addEventListener("click", () => {
   document.getElementById("codePy").value = "";
 });
 
-<<<<<<< HEAD:app/static/js/terminal/python_terminal.js
 // ✅ AI Chat Integration
-=======
->>>>>>> stable-saas-start:static/js/terminal/python_terminal.js
 const promptInput = document.getElementById("prompt");
 const voiceBtn = document.getElementById("voiceBtn");
 const sendBtn = document.getElementById("sendBtn");
@@ -98,15 +93,7 @@ sendBtn.addEventListener("click", () => {
   promptInput.value = "";
 });
 
-<<<<<<< HEAD:app/static/js/terminal/python_terminal.js
 // ✅ Templates
-=======
-const sharedCode = loadSharedCode();
-if (sharedCode) {
-  document.getElementById("codePy").value = sharedCode;
-}
-
->>>>>>> stable-saas-start:static/js/terminal/python_terminal.js
 const templateDropdown = document.getElementById("templateDropdown");
 const templates = getTemplates("python");
 
@@ -122,14 +109,12 @@ templateDropdown.addEventListener("change", () => {
   document.getElementById("codePy").value = templates[selectedTemplate];
 });
 
-<<<<<<< HEAD:app/static/js/terminal/python_terminal.js
 // ✅ Load shared code if exists
 const sharedCode = loadSharedCode();
 if (sharedCode) {
   document.getElementById("codePy").value = sharedCode;
 }
-=======
-// Hook Explain Code Button
+
+// ✅ Explain Code Button
 const explainBtn = document.getElementById("explainBtn");
 explainBtn.addEventListener("click", () => explainCode("python"));
->>>>>>> stable-saas-start:static/js/terminal/python_terminal.js
