@@ -1,8 +1,11 @@
+// python_terminal.js
+
 import { askAI } from '../chat/ai_chat.js';
 import { initVoiceInput } from '../utils.js';
 import { loadCode, saveCode } from '../features/code_history.js';
 import { generateShareLink, loadSharedCode } from '../features/code_sharing.js';
 import { getTemplates } from '../features/templates.js';
+import { explainCode } from '../features/explain_code.js';
 
 async function loadPyodideScript() {
   document.getElementById("loadingMessage").style.display = "block";
@@ -50,7 +53,6 @@ result
 
 const pyodide = await loadPyodideScript();
 
-// ✅ Code execution logic
 document.getElementById("runPy").addEventListener("click", async () => {
   const outputArea = document.getElementById("outputPy");
   const userCode = document.getElementById("codePy").value;
@@ -72,13 +74,11 @@ document.getElementById("runPy").addEventListener("click", async () => {
   } catch (e) {}
 });
 
-// ✅ Reset
 document.getElementById("resetPy").addEventListener("click", () => {
   document.getElementById("outputPy").textContent = "";
   document.getElementById("codePy").value = "";
 });
 
-// ✅ AI Chat
 const promptInput = document.getElementById("prompt");
 const voiceBtn = document.getElementById("voiceBtn");
 const sendBtn = document.getElementById("sendBtn");
@@ -90,9 +90,14 @@ sendBtn.addEventListener("click", () => {
   if (!prompt) return;
   const provider = document.getElementById("providerDropdown").value;
   askAI(prompt, provider);
+  promptInput.value = "";
 });
 
-// ✅ Templates loader
+const sharedCode = loadSharedCode();
+if (sharedCode) {
+  document.getElementById("codePy").value = sharedCode;
+}
+
 const templateDropdown = document.getElementById("templateDropdown");
 const templates = getTemplates("python");
 
@@ -108,8 +113,6 @@ templateDropdown.addEventListener("change", () => {
   document.getElementById("codePy").value = templates[selectedTemplate];
 });
 
-// ✅ Load shared code if any
-const sharedCode = loadSharedCode();
-if (sharedCode) {
-  document.getElementById("codePy").value = sharedCode;
-}
+// Hook Explain Code Button
+const explainBtn = document.getElementById("explainBtn");
+explainBtn.addEventListener("click", () => explainCode("python"));

@@ -26,16 +26,14 @@
       <div id="chatBox" class="chat-box"></div>
       <div class="chat-input-wrapper">
         <textarea id="prompt" placeholder="Ask me anything..."></textarea>
-
+        <button id="voiceBtn" class="chat-icon" title="Speak">🎙️</button>
+        <button id="sendBtn" class="chat-icon" title="Send">➤</button>
+      </div>
         <!-- ✅ Provider dropdown -->
         <select id="providerDropdown">
           <option value="openai" selected>OpenAI</option>
           <option value="groq">Groq</option>
         </select>
-
-        <button id="voiceBtn" class="chat-icon" title="Speak">🎙️</button>
-        <button id="sendBtn" class="chat-icon" title="Send">➤</button>
-      </div>
       <h5 style="text-align: center;">AI can make mistakes. Verify important info.</h5>
     </div>
 
@@ -48,7 +46,7 @@
       <div class="code-buttons">
         <button id="runID">▶️ Run</button>
         <button id="resetID">🔄 Reset</button>
-        <button onclick="printTerminal()" class="print">🖨️ Print</button>
+        <button id="explainCode">🤖 Explain Code</button>
       </div>
       <pre><code class="output" id="outputID"></code></pre>
     </div>
