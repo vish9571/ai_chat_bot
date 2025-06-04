@@ -9,22 +9,21 @@
 <body>
   <div class="auth-header">
     <h1 class="intro">📘 Start Learning Today</h1>
-    <p class="intro-sub">Join the Interactive eBook Community</p>
+    <p class="intro-sub">Join the Learn with AI Community</p>
   </div>
 
   <div class="login-container">
     <h2>📝 Create Your Account</h2>
 
-    {% if error %}
-      <p class="error">{{ error }}</p>
-    {% endif %}
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <p class="success">{{ messages[0] }}</p>
+        {% for category, message in messages %}
+          <p class="{{ category }}">{{ message }}</p>
+        {% endfor %}
       {% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('auth.register') }}">
+    <form method="POST" action="{{ url_for('auth.register') }}" id="registerForm">
       <div class="input-group">
         <i class="fas fa-user"></i>
         <input type="text" name="username" placeholder="Choose a username" required>
@@ -32,7 +31,10 @@
 
       <div class="input-group">
         <i class="fas fa-lock"></i>
-        <input type="password" name="password" id="password" placeholder="Create a password" required>
+        <input type="password" name="password" id="password"
+          placeholder="Create a password" required
+          pattern="(?=.*\d)(?=.*[A-Z])(?=.*\W).{9,}"
+          title="At least 9 characters, 1 uppercase, 1 number, 1 special character">
       </div>
 
       <div class="input-group">
@@ -45,12 +47,11 @@
         <label for="showPassword">Show Password</label>
       </div>
 
-      <small>
-        Must be at least 9 characters and include:
-        1 uppercase letter, 1 number, and 1 special character.
+      <small style="display:block;margin-bottom:10px;">
+        Must be at least 9 characters, with 1 uppercase, 1 number, and 1 special character.
       </small>
 
-      <button type="submit">Register</button>
+      <button type="submit" id="submitBtn">Register</button>
     </form>
 
     <div class="link">
@@ -65,6 +66,11 @@
       const type = this.checked ? "text" : "password";
       pwd.type = type;
       confirmPwd.type = type;
+    });
+
+    document.getElementById("registerForm").addEventListener("submit", function () {
+      document.getElementById("submitBtn").disabled = true;
+      document.getElementById("submitBtn").innerText = "Registering...";
     });
   </script>
 </body>

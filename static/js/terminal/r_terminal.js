@@ -79,6 +79,7 @@ import { explainCode } from '../features/explain_code.js';
     askAI(prompt, provider);
   });
 
+  /*
   // ✅ Templates for R
   const templateDropdown = document.getElementById("templateDropdown");
   const templates = getTemplates("r");
@@ -94,6 +95,7 @@ import { explainCode } from '../features/explain_code.js';
     const selectedTemplate = templateDropdown.value;
     document.getElementById("codeID").value = templates[selectedTemplate];
   });
+*/
 
   // ✅ Load shared code if exists
   const sharedCode = loadSharedCode();

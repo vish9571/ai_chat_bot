@@ -2,7 +2,7 @@ import { askAI } from '../chat/ai_chat.js';
 import { initVoiceInput, highlightNewBlocks } from '../utils.js';
 import { loadCode, saveCode } from '../features/code_history.js';
 import { generateShareLink, loadSharedCode } from '../features/code_sharing.js';
-import { getTemplates } from '../features/templates.js';
+// import { getTemplates } from '../features/templates.js';
 import { explainCode } from '../features/explain_code.js';
 
 async function loadPyodideScript() {
@@ -93,21 +93,23 @@ sendBtn.addEventListener("click", () => {
   promptInput.value = "";
 });
 
+/*
 // ✅ Templates
-const templateDropdown = document.getElementById("templateDropdown");
-const templates = getTemplates("python");
+  const templateDropdown = document.getElementById("templateDropdown");
+  const templates = getTemplates("python");
 
-Object.keys(templates).forEach(label => {
-  const option = document.createElement("option");
-  option.value = label;
-  option.textContent = label;
-  templateDropdown.appendChild(option);
-});
+  Object.keys(templates).forEach(label => {
+    const option = document.createElement("option");
+    option.value = label;
+    option.textContent = label;
+    templateDropdown.appendChild(option);
+  });
 
-templateDropdown.addEventListener("change", () => {
-  const selectedTemplate = templateDropdown.value;
-  document.getElementById("codePy").value = templates[selectedTemplate];
-});
+  templateDropdown.addEventListener("change", () => {
+    const selectedTemplate = templateDropdown.value;
+    document.getElementById("codePy").value = templates[selectedTemplate];
+  });
+*/
 
 // ✅ Load shared code if exists
 const sharedCode = loadSharedCode();
