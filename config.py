@@ -10,8 +10,11 @@ class Config:
     OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
     GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 
-    # Handle DATABASE_URL override (for Render production)
-    db_url = os.environ.get('DATABASE_URL', f'sqlite:///{db_path}')
+    db_url = os.environ.get('DATABASE_URL')
+
+    if not db_url:
+        raise ValueError("❌ DATABASE_URL is missing! Please set DATABASE_URL in environment variables.")
+
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://")
 
