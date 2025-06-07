@@ -1,35 +1,11 @@
-import json
 import bcrypt
-import re
-from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from app.models import db, User
+from functools import wraps
 
 auth_bp = Blueprint('auth', __name__)
 
-# Helpers to load/save users (JSON flat file for now)
-
-def load_users():
-    try:
-        with open('users.json', 'r') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
-
-def save_user(username, hashed_password):
-    users = load_users()
-    users[username] = hashed_password.decode('utf-8')
-    with open('users.json', 'w') as file:
-        json.dump(users, file, indent=4)
-
-def is_strong_password(password: str) -> bool:
-    return (
-        len(password) >= 9 and
-        re.search(r'[A-Z]', password) and
-        re.search(r'\d', password) and
-        re.search(r'[^A-Za-z0-9]', password)
-    )
-
-# Login Required Decorator (used for protected routes later)
+# Login Required Decorator
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -38,47 +14,47 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Registration route
+# Registration Route
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         raw_password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        users = load_users()
 
-        if username in users:
-            return render_template('register.html', error='Username already exists.')
-        if raw_password != confirm_password:
-            return render_template('register.html', error='Passwords do not match.')
-        if not is_strong_password(raw_password):
-            return render_template('register.html', error='Weak password.')
+        if User.query.filter_by(username=username).first():
+            flash('Username already exists.', 'error')
+            return redirect(url_for('auth.register'))
 
         hashed_password = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
-        save_user(username, hashed_password)
-        flash('Registration successful. Please log in.')
+        user = User(username=username, hashed_password=hashed_password.decode('utf-8'))
+
+        db.session.add(user)
+        db.session.commit()
+
+        flash('Registration successful. Please log in.', 'success')
         return redirect(url_for('auth.login'))
 
     return render_template('register.html')
 
-# Login route
+# Login Route
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        users = load_users()
         username = request.form['username']
-        password = request.form['password'].encode('utf-8')
+        password = request.form['password']
 
-        if username in users:
-            stored_hash = users[username].encode('utf-8')
-            if bcrypt.checkpw(password, stored_hash):
-                session['user'] = username
-                return redirect(url_for('main.home'))
+        user = User.query.filter_by(username=username).first()
 
-        return render_template('login.html', error='Invalid username or password')
+        if user and bcrypt.checkpw(password.encode('utf-8'), user.hashed_password.encode('utf-8')):
+            session['user'] = username
+            return redirect(url_for('main.home'))
+
+        flash('Invalid username or password.', 'error')
+        return redirect(url_for('auth.login'))
+
     return render_template('login.html')
 
-# Logout route
+# Logout Route
 @auth_bp.route('/logout')
 @login_required
 def logout():

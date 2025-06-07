@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_cors import CORS
+from app.models import db
 
 def create_app():
     base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -15,15 +16,14 @@ def create_app():
     app.config.from_object('config.Config')
     CORS(app)
 
-    # Import blueprints
+    db.init_app(app)   # ✅ Important: init SQLAlchemy here
+
     from app.auth.routes import auth_bp
     from app.routes.main import main_bp
 
-    # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
 
-    # Session timeout globally set
     app.permanent_session_lifetime = app.config['SESSION_LIFETIME']
 
     return app
