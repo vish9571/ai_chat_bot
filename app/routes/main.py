@@ -77,7 +77,7 @@ Your job is to behave like a professional AI coding tutor, always explaining tho
             "Content-Type": "application/json"
         }
         url = "https://api.groq.com/openai/v1/chat/completions"
-        model = "llama3.1-8b-8192"
+        model = "llama3-8b-8192"
     else:
         return jsonify({"response": "❌ Invalid provider selected."})
 
