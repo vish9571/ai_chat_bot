@@ -85,12 +85,21 @@ const providerDropdown = document.getElementById("providerDropdown");
 
 initVoiceInput(promptInput, voiceBtn);
 
+let hasMoved = false;
+  function moveToBottom() {
+    if (!hasMoved) {
+      document.querySelector('.chat-container')?.classList.add('moved');
+      hasMoved = true;
+    }
+  }
+
 sendBtn.addEventListener("click", () => {
   const prompt = promptInput.value.trim();
   if (!prompt) return;
   const provider = providerDropdown.value;
   askAI(prompt, provider);
   promptInput.value = "";
+  moveToBottom();
 });
 
 /*
@@ -120,3 +129,6 @@ if (sharedCode) {
 // ✅ Explain Code Button
 const explainBtn = document.getElementById("explainBtn");
 explainBtn.addEventListener("click", () => explainCode("python"));
+
+
+

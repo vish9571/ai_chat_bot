@@ -72,11 +72,21 @@ import { explainCode } from '../features/explain_code.js';
 
   initVoiceInput(promptInput, voiceBtn);
 
+  let hasMoved = false;
+  function moveToBottom() {
+    if (!hasMoved) {
+      document.querySelector('.chat-container')?.classList.add('moved');
+      hasMoved = true;
+    }
+  }
+
   sendBtn.addEventListener("click", () => {
     const prompt = promptInput.value.trim();
     if (!prompt) return;
     const provider = providerDropdown.value;
     askAI(prompt, provider);
+    promptInput.value = "";
+    moveToBottom();
   });
 
   /*
