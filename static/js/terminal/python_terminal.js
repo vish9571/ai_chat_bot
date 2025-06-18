@@ -24,13 +24,21 @@ function wrapPythonCode(code) {
   return `
 import sys, io, os
 import matplotlib.pyplot as plt
+import json # For passing data back to JS
 
-try: os.remove("plot.png")
-except: pass
+# These are effectively global within the executed string
+_plot_filenames = []
+_plot_counter = 0
 
 def _custom_show():
-  plt.savefig("plot.png")
+  # Removed 'nonlocal' as _plot_counter and _plot_filenames are global in this context
+  global _plot_counter # Use global to explicitly state you're modifying the global variable
+  global _plot_filenames # Use global to explicitly state you're modifying the global variable
+  filename = f"plot_{_plot_counter}.png"
+  plt.savefig(filename)
   plt.close()
+  _plot_filenames.append(filename)
+  _plot_counter += 1
 
 plt.show = _custom_show
 
@@ -38,14 +46,18 @@ _stdout = sys.stdout
 sys.stdout = io.StringIO()
 
 try:
+  # Reset for each execution - these are still effectively global for the 'exec' scope
+  _plot_filenames = []
+  _plot_counter = 0
   exec("""${code}""")
-  result = sys.stdout.getvalue()
+  result_text = sys.stdout.getvalue()
 except Exception as e:
-  result = f"❌ Error: {e}"
+  result_text = f"❌ Error: {e}"
 finally:
   sys.stdout = _stdout
 
-result
+# Combine text output and plot filenames into a JSON string
+json.dumps({"text_output": result_text, "plot_files": _plot_filenames})
   `;
 }
 
@@ -54,22 +66,42 @@ const pyodide = await loadPyodideScript();
 document.getElementById("runPy").addEventListener("click", async () => {
   const outputArea = document.getElementById("outputPy");
   const userCode = document.getElementById("codePy").value;
-  outputArea.innerHTML = "";
+  outputArea.innerHTML = ""; // Clear previous output
 
   try {
-    const result = await pyodide.runPythonAsync(wrapPythonCode(userCode));
-    outputArea.innerHTML = result.replace(/\n/g, "<br>");
+    const json_result_string = await pyodide.runPythonAsync(wrapPythonCode(userCode));
+    const parsed_result = JSON.parse(json_result_string); // Parse the JSON string
 
-    const bytes = pyodide.FS.readFile("plot.png");
-    const blob = new Blob([bytes], { type: "image/png" });
-    const url = URL.createObjectURL(blob);
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = "Generated Plot";
-    img.style.maxWidth = "100%";
-    img.style.marginTop = "1rem";
-    outputArea.appendChild(img);
-  } catch (e) {}
+    // Display text output
+    outputArea.innerHTML = parsed_result.text_output.replace(/\n/g, "<br>");
+
+    // Display all generated plots
+    for (const filename of parsed_result.plot_files) {
+      try {
+        const bytes = pyodide.FS.readFile(filename);
+        const blob = new Blob([bytes], { type: "image/png" });
+        const url = URL.createObjectURL(blob);
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = `Generated Plot: ${filename}`;
+        img.style.maxWidth = "100%";
+        img.style.marginTop = "1rem";
+        outputArea.appendChild(img);
+        // Optionally, delete the file from Pyodide's FS after reading if you want to clean up
+        // pyodide.FS.unlink(filename);
+      } catch (plotError) {
+        console.error(`Error displaying plot ${filename}:`, plotError);
+        const errorDiv = document.createElement("div");
+        errorDiv.textContent = `❌ Could not display plot ${filename}. Error: ${plotError}`;
+        outputArea.appendChild(errorDiv);
+      }
+    }
+
+  } catch (e) {
+    // Handle general Python execution errors
+    outputArea.innerHTML = `<span style="color: red;">❌ Python Execution Error: ${e}</span>`;
+    console.error("Python execution error:", e);
+  }
 });
 
 document.getElementById("resetPy").addEventListener("click", () => {
