@@ -13,7 +13,7 @@ class Config:
     db_url = os.environ.get('DATABASE_URL')
 
     if not db_url:
-        raise ValueError("❌ DATABASE_URL is missing! Please set DATABASE_URL in environment variables.")
+        db_url = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://")
